@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { App, Head } from '@inertiajs/vue3';
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
+import AppLogo from '@/components/AppLogo.vue';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,6 +19,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 <template>
     <Head title="Dashboard" />
+
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class admin
+class IsAdmin
 {
     /**
      * Handle an incoming request.
@@ -15,14 +15,12 @@ class admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         $utente = $request->user();
-        
-        if($utente->admin){
+
+        if ($utente->admin) {
             return $next($request);
-        }else{
-            return redirect("/");
+        } else {
+            return redirect()->route('dashboard');
         }
-     
     }
 }

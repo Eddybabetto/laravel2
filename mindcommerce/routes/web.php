@@ -2,9 +2,16 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
+use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canRegister' => Features::enabled(Features::registration()),
+    ]);
+})->name('home');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
@@ -13,17 +20,17 @@ Route::get('dashboard', function () {
 
 //  Route::get('/product/{id}', [ProductController::class, "show"]);
 
- Route::resource("/product", ProductController::class)->middleware("auth")->only([
+Route::resource("/product", ProductController::class)->middleware("auth")->only([
     'create',
     'store',
     'update',
     'destroy'
- ]);
+]);
 
-  Route::resource("/product", ProductController::class)->only([
+Route::resource("/product", ProductController::class)->only([
     'index',
     'show'
- ]);
+]);
 
 Route::post("/product/{id}/addtocart", [ProductController::class, "addtocart"])->middleware("auth");
 
@@ -35,14 +42,14 @@ Route::post("/product/{id}/addtocart", [ProductController::class, "addtocart"])-
 
 
 
-Route::prefix("/admin/user")->group(function () {
+Route::prefix("/admin/user")->middleware(["auth", IsAdmin::class])->group(function () {
     Route::get("/", [AdminController::class, "get_users"]);
     Route::post("/", [AdminController::class, "create_user"]);
     Route::delete("/{id}", [AdminController::class, "delete_user"]);
     Route::put("/{id}/restore", [AdminController::class, "restore_user"]);
     Route::put("/{id}", [AdminController::class, "update_user"]);
     Route::get("/{id}", [AdminController::class, "get_user"]);
-        
+
     Route::prefix("/{id}/address")->group(function () {
         Route::get("/", [AdminController::class, "get_addresses_for_user"]);
         Route::get("/{address_id}", [AdminController::class, "get_address_for_user"]);
@@ -50,8 +57,7 @@ Route::prefix("/admin/user")->group(function () {
         Route::put("/{address_id}", [AdminController::class, "update_address_to_user"]);
         Route::delete("/{address_id}", [AdminController::class, "delete_address_to_user"]);
     });
+});
 
-})->middleware(["auth", "admin"]);
 
-
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

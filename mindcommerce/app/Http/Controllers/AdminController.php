@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AdminController extends Controller
 {
@@ -11,7 +13,15 @@ class AdminController extends Controller
      */
     public function get_users()
     {
-        return "ok";
+        return Inertia::render('UsersIndex', [
+                "users"=> User::all()
+        ]);
+    }
+  public function get_user($id)
+    {
+        return Inertia::render('UserShow', [
+                "user"=> User::find($id)
+        ]);
     }
 
     /**
