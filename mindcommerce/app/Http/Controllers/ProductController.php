@@ -21,7 +21,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-
+            var_dump("pippo");
     }
 
     /**
