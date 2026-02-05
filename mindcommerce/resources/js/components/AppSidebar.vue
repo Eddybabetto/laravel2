@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { LayoutGrid, User, Cuboid } from 'lucide-vue-next';
 
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -27,7 +27,13 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: "Utenti",
-        href: "/admin/user"
+        href: "/admin/user",
+        icon: User
+    },
+    {
+        title: "Prodotti",
+        href: "/admin/products",
+        icon: Cuboid
     }
 ];
 
@@ -50,7 +56,9 @@ const mainNavItems: NavItem[] = [
         <SidebarContent>
             <NavMain :items="mainNavItems" />
         </SidebarContent>
-
+        <SidebarFooter>
+            <NavUser />
+        </SidebarFooter>
     </Sidebar>
     <slot />
 </template>
