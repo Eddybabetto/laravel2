@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Validator;
 
-use function Laravel\Prompts\form;
 
 class ProductController extends Controller
 {
@@ -23,6 +23,7 @@ class ProductController extends Controller
      */
     public function create()
     {
+        return Inertia::render("ProductCreate");
         
     }
 
@@ -31,7 +32,17 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+     Validator::make($request->all(), [
+            "SKU"=>"required|unique:products",
+            "price"=>"integer|gte:0|required",
+            "stock"=>"integer|gte:0|required",
+            "name"=>"required",
+            "description"=>"required",
+            "categories"=>"required"
+        ])->validate();
+
+       Product::create($request->all());
     }
 
     /**

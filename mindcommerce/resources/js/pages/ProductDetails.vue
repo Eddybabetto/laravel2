@@ -9,7 +9,7 @@ import PlaceholderPattern from '../components/PlaceholderPattern.vue';
 import AppLogo from '@/components/AppLogo.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import ProductController from '@/actions/App/Http/Controllers/ProductController';
-import Button from '@/components/ui/button/Button.vue';
+
 
 defineProps({ prodotto: Object })
 
@@ -19,9 +19,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: "/admin/products"
     },
 ];
-function goBack(){
-    window.history.back()
-}
+
 </script>
 
 <template>
@@ -30,7 +28,7 @@ function goBack(){
 
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Button v-on:click="goBack()">Torna Indietro</Button>
+
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <dl v-if="prodotto" class="max-w-md text-heading divide-y divide-default">
                 <div class="flex flex-col pb-3">

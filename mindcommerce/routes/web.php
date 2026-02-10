@@ -18,6 +18,8 @@ Route::get('dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get("/admin/products", [ProductController::class, "get_products"])->middleware(["auth", IsAdmin::class]);
+Route::get("/admin/products/create", [ProductController::class, "create"])->middleware(["auth", IsAdmin::class]);
+Route::post("/admin/products/create", [ProductController::class, "store"])->middleware(["auth", IsAdmin::class]);
 Route::get("/admin/products/{id}", [ProductController::class, "get_product"])->middleware(["auth", IsAdmin::class]);
 
 

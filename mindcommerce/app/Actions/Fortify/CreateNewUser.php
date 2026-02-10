@@ -23,7 +23,7 @@ class CreateNewUser implements CreatesNewUsers
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
             "cf"=>"size:16|required",
-            "tel"=>"regex:/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/|required"
+            "tel"=>"regex:/^(\+\d{1,2}\s)?\(?{3}\)?[\s.-]{3}[\s.-]{4}$/|required"
         ])->validate();
 
         return User::create([
