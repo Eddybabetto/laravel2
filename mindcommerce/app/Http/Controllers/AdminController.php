@@ -14,7 +14,8 @@ class AdminController extends Controller
     public function get_users()
     {
         return Inertia::render('UsersIndex', [
-                "users"=> User::all()
+                "users"=> User::get()
+                // "users"=> User::paginate()->toResourceCollection();
         ]);
     }
   public function get_user($id)

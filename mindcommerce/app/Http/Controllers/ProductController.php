@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+
 use function Laravel\Prompts\form;
 
 class ProductController extends Controller
@@ -21,7 +23,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-            var_dump("pippo");
+        
     }
 
     /**
@@ -64,8 +66,27 @@ class ProductController extends Controller
         //
     }
 
-public function addtocart(Request $request, string $id){
-return var_dump($request->user());
-}
+    public function get_products()
+    {
 
+        $products = Product::all();
+
+        return Inertia::render("ProductsIndex", [
+            "prodotti" => $products
+        ]);
+    }
+
+    public function get_product($id)
+    {
+        $product = Product::find($id);
+
+        if ($product) {
+        return Inertia::render("ProductDetails", [
+            "prodotto" => $product
+        ]);
+        }else{
+            abort(404);
+        }
+      
+    }
 }

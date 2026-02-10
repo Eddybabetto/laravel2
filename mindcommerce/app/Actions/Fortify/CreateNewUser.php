@@ -22,10 +22,16 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+            "cf"=>"size:16|required",
+            "tel"=>"regex:/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/|required"
         ])->validate();
 
         return User::create([
             'name' => $input['name'],
+            'surname' => $input['surname'],
+            'cf' => $input['cf'],
+            'tel' => $input['tel'],
+            'admin' => false,
             'email' => $input['email'],
             'password' => $input['password'],
         ]);

@@ -42,12 +42,55 @@ import { store } from '@/routes/register';
                 </div>
 
                 <div class="grid gap-2">
+                    <Label for="surname">Surname</Label>
+                    <Input
+                        id="surname"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="2"
+                        autocomplete="surname"
+                        name="surname"
+                        placeholder="Full surname"
+                    />
+                    <InputError :message="errors.surname" />
+                </div> 
+                <div class="grid gap-2">
+                    <Label for="cf">CF</Label>
+                    <Input
+                        id="cf"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="3"
+                        autocomplete="cf"
+                        name="cf"
+                        placeholder="fiscal code"
+                    />
+                    <InputError :message="errors.cf" />
+                </div> 
+                <div class="grid gap-2">
+                    <Label for="tel">Phone</Label>
+                    <Input
+                        id="tel"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="4"
+                        autocomplete="tel"
+                        name="tel"
+                        placeholder="Phone number"
+                    />
+                    <InputError :message="errors.tel" />
+                </div>
+
+                <div class="grid gap-2">
                     <Label for="email">Email address</Label>
                     <Input
                         id="email"
                         type="email"
                         required
-                        :tabindex="2"
+                        :tabindex="5"
                         autocomplete="email"
                         name="email"
                         placeholder="email@example.com"
@@ -61,7 +104,7 @@ import { store } from '@/routes/register';
                         id="password"
                         type="password"
                         required
-                        :tabindex="3"
+                        :tabindex="6"
                         autocomplete="new-password"
                         name="password"
                         placeholder="Password"
@@ -75,7 +118,7 @@ import { store } from '@/routes/register';
                         id="password_confirmation"
                         type="password"
                         required
-                        :tabindex="4"
+                        :tabindex="7"
                         autocomplete="new-password"
                         name="password_confirmation"
                         placeholder="Confirm password"

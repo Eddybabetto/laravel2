@@ -17,29 +17,8 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
-//  Route::get('/product/{id}', [ProductController::class, "show"]);
-
-Route::resource("/product", ProductController::class)->middleware("auth")->only([
-    'create',
-    'store',
-    'update',
-    'destroy'
-]);
-
-Route::resource("/product", ProductController::class)->only([
-    'index',
-    'show'
-]);
-
-Route::post("/product/{id}/addtocart", [ProductController::class, "addtocart"])->middleware("auth");
-
-// Route::get("/api/user/addresses", [UserController::class, "fetch_addresses"])->middleware("auth");
-
-// Route::get("/", [IndexController::class, "index"]);
-// Route::get("/admin", [IndexController::class, "index"])->middleware("auth");
-
-
+Route::get("/admin/products", [ProductController::class, "get_products"])->middleware(["auth", IsAdmin::class]);
+Route::get("/admin/products/{id}", [ProductController::class, "get_product"])->middleware(["auth", IsAdmin::class]);
 
 
 Route::prefix("/admin/user")->middleware(["auth", IsAdmin::class])->group(function () {
