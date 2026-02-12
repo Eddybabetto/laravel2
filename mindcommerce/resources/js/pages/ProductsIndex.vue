@@ -8,7 +8,7 @@ import { type BreadcrumbItem } from '@/types';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
 import AppLogo from '@/components/AppLogo.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-
+import Button from '@/components/ui/button/Button.vue';
 defineProps({ prodotti: Object })
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -23,6 +23,10 @@ function NavigaA(id_prodotto:any){
     router.get("/admin/products/"+id_prodotto)
 }
 
+function creaNuovo(){
+    router.get("/admin/products/create")
+}
+
 </script>
 
 <template>
@@ -34,6 +38,8 @@ function NavigaA(id_prodotto:any){
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
  
           <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+                <Button class="ml-auto mr-0" v-on:click="creaNuovo()">Nuovo Prodotto</Button>
+   
             <table class="w-full text-sm text-left rtl:text-right text-body">
                 <thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default">
                     <tr>

@@ -21,6 +21,7 @@ Route::get("/admin/products", [ProductController::class, "get_products"])->middl
 Route::get("/admin/products/create", [ProductController::class, "create"])->middleware(["auth", IsAdmin::class]);
 Route::post("/admin/products/create", [ProductController::class, "store"])->middleware(["auth", IsAdmin::class]);
 Route::get("/admin/products/{id}", [ProductController::class, "get_product"])->middleware(["auth", IsAdmin::class]);
+Route::put("/admin/products/{id}", [ProductController::class, "update"])->middleware(["auth", IsAdmin::class]);
 
 
 Route::prefix("/admin/user")->middleware(["auth", IsAdmin::class])->group(function () {

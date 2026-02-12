@@ -24,7 +24,6 @@ class ProductController extends Controller
     public function create()
     {
         return Inertia::render("ProductCreate");
-        
     }
 
     /**
@@ -33,16 +32,16 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
-     Validator::make($request->all(), [
-            "SKU"=>"required|unique:products",
-            "price"=>"integer|gte:0|required",
-            "stock"=>"integer|gte:0|required",
-            "name"=>"required",
-            "description"=>"required",
-            "categories"=>"required"
+        Validator::make($request->all(), [
+            "SKU" => "required|unique:products",
+            "price" => "decimal:2|gte:0|required",
+            "stock" => "integer|gte:0|required",
+            "name" => "required",
+            "description" => "required",
+            "categories" => "required"
         ])->validate();
 
-       Product::create($request->all());
+        Product::create($request->all());
     }
 
     /**
@@ -66,7 +65,27 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Validator::make($request->all(), [
+            "price" => "decimal:2|gte:0|required",
+            "stock" => "integer|gte:0|required",
+            "name" => "required",
+            "description" => "required",
+            "categories" => "required"
+        ])->validate();
+
+        $prodotto = Product::find($id);
+
+        $prodotto->name = $request->name;
+        $prodotto->price = $request->price;
+        $prodotto->stock = $request->stock;
+        $prodotto->categories = $request->categories;
+        $prodotto->description = $request->description;
+
+        $prodotto->save();
+
+        return Inertia::render("ProductDetails", [
+            "prodotto" => $prodotto
+        ]);
     }
 
     /**
@@ -92,12 +111,11 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if ($product) {
-        return Inertia::render("ProductDetails", [
-            "prodotto" => $product
-        ]);
-        }else{
+            return Inertia::render("ProductDetails", [
+                "prodotto" => $product
+            ]);
+        } else {
             abort(404);
         }
-      
     }
 }
