@@ -51,7 +51,7 @@ function resetProdotto() {
     <AppLayout :breadcrumbs="breadcrumbs">
 
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <dl v-if="prodotto && !editabile" class="max-w-md text-heading divide-y divide-default">
+            <dl v-if ="prodotto && !editabile" class="max-w-md text-heading divide-y divide-default">
                 <div class="flex flex-col pb-3">
                     <dt class="mb-1 text-body">ID</dt>
                     <dd class="text-lg font-medium">{{ prodotto.id }}</dd>
