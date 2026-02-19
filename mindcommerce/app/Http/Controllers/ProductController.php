@@ -43,23 +43,6 @@ class ProductController extends Controller
 
         Product::create($request->all());
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        return json_encode(Product::find($id));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -87,6 +70,23 @@ class ProductController extends Controller
             "prodotto" => $prodotto
         ]);
     }
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        return json_encode(Product::find($id));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+  
 
     /**
      * Remove the specified resource from storage.
