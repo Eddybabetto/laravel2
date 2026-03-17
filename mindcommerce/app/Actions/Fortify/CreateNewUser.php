@@ -22,8 +22,7 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
-            "cf"=>"size:16|required",
-            "tel"=>"regex:/^(\+\d{1,2}\s)?\(?{3}\)?[\s.-]{3}[\s.-]{4}$/|required"
+            "cf"=>"size:16|required"
         ])->validate();
 
         return User::create([

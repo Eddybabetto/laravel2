@@ -8,6 +8,7 @@ import { type BreadcrumbItem } from '@/types';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
 import AppLogo from '@/components/AppLogo.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
+import Button from '@/components/ui/button/Button.vue';
 
 defineProps({ users: Object })
 
@@ -21,6 +22,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 function loadUser(id: Number) {
     router.get("/admin/user/" + id)
 }
+function creaNuovo(){
+    router.get("/admin/user/create")
+}
 </script>
 
 <template>
@@ -30,8 +34,9 @@ function loadUser(id: Number) {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-
+            
             <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+               <Button class="ml-auto mr-0" v-on:click="creaNuovo()">Nuovo Utente</Button>
                 <table class="w-full text-sm text-left rtl:text-right text-body">
                     <thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default">
                         <tr>
