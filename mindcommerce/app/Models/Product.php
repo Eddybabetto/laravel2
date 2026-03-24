@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Product extends Model
 {
   protected $fillable = [
@@ -14,4 +14,8 @@ class Product extends Model
         "stock",
         "categories"
     ];
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, "carts");
+    }
 }

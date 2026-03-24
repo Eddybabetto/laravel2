@@ -25,8 +25,15 @@ class AdminController extends Controller
     }
     public function get_user($id)
     {
+        $user    = User::with(["carts", "carts.product"])->find($id);
+        $products_saved_by_user = $user->products;
+        $cart_rows = $user->carts;
+
+     
         return Inertia::render('UserShow', [
-            "user" => User::find($id)
+            "user" => User::find($id),
+            "products" => $products_saved_by_user,
+            "cart_rows" => $cart_rows
         ]);
     }
 
@@ -129,10 +136,9 @@ class AdminController extends Controller
             return Inertia::render('UserShow', [
                 "user" => $utente
             ]);
-        }else{
+        } else {
             abort(500);
         }
-    
     }
 
 

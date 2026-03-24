@@ -21,8 +21,8 @@ const { urlIsActive } = useActiveUrl();
 <template>
     <SidebarGroup class="px-2 py-0">
         <SidebarMenu>
-            <SidebarMenuItem v-for="item in items" :key="item.title">
-                <SidebarMenuButton
+            <SidebarMenuItem v-for="item in items" :key="item.title" >
+                <SidebarMenuButton v-if="item.show || this.$page.props.auth.user.admin"
                     as-child
                     :is-active="urlIsActive(item.href)"
                     :tooltip="item.title"

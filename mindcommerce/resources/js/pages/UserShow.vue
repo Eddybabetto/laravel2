@@ -17,7 +17,7 @@ import { Spinner } from '@/components/ui/spinner';
 
 import { Form } from '@inertiajs/vue3';
 
-const props = defineProps({ user: Object })
+const props = defineProps({ user: Object, products: Object, cart_rows: Object })
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -77,6 +77,14 @@ function eliminaUtente() {
                     <dt class="mb-1 text-body">Admin</dt>
                     <dd v-if="user.admin" class="text-lg font-medium"> E' UN ADMIN </dd>
                     <dd v-else class="text-lg font-medium"> NON E' UN ADMIN </dd>
+                </div>
+                <div class="flex flex-col pt-3">
+                    <dt class="mb-1 text-body">products</dt>
+                    <dd class="text-lg font-medium">{{ products }}</dd>
+                </div> 
+                 <div class="flex flex-col pt-3">
+                    <dt class="mb-1 text-body">cart</dt>
+                    <dd class="text-lg font-medium">{{ cart_rows }}</dd>
                 </div>
             </dl>
 

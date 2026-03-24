@@ -22,7 +22,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div
+    
+        <div v-if="$page.props.auth.user.admin"
             class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
         >
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
@@ -47,6 +48,9 @@ const breadcrumbs: BreadcrumbItem[] = [
             >
                 <PlaceholderPattern />
             </div>
+        </div>
+        <div v-else>
+            Interfaccia utente non admin
         </div>
     </AppLayout>
 </template>

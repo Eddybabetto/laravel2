@@ -24,16 +24,19 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        show: true
     },
     {
         title: "Utenti",
         href: "/admin/user",
-        icon: User
+        icon: User,
+        show: false
     },
     {
         title: "Prodotti",
         href: "/admin/products",
-        icon: Cuboid
+        icon: Cuboid,
+        show: false
     }
 ];
 
