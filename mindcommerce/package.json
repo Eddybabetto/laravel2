@@ -34,8 +34,10 @@
     "dependencies": {
         "@inertiajs/vue3": "^2.3.7",
         "@vueuse/core": "^12.8.2",
+        "axios": "^1.13.6",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
+        "iconify": "^1.4.0",
         "laravel-vite-plugin": "^2.0.0",
         "lucide-vue-next": "^0.468.0",
         "reka-ui": "^2.6.1",

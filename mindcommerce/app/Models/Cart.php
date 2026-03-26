@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Cart extends Model
 {
  
+  public $timestamps = false;
   public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

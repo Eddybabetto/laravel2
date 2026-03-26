@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -13,9 +15,10 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('dashboard', [DashboardController::class, "show_dashboard"])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::post("cart/add", [CartController::class, "store"])->middleware(['auth', 'verified']);
+Route::get("cart", [CartController::class, "show"])->middleware(['auth', 'verified']);
 
 Route::get("/admin/products", [ProductController::class, "get_products"])->middleware(["auth", IsAdmin::class]);
 Route::get("/admin/products/create", [ProductController::class, "create"])->middleware(["auth", IsAdmin::class]);
