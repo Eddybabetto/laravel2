@@ -65,12 +65,36 @@ class CartController extends Controller
 
         $utente = $request->user();
         $carts  = Cart::with(["product"])->where("user_id", $utente->id)->get();
+        // $carts  = $utente->products;
+        // $carts = [
+        //     {user_id: 1,
+        //     product_id:23,
+        //     qty: 4,
+        //     product: {
+        //         id: 23,
+        //         name: "shampoo antiforfora"
+        //         categories: "beauty",
+        //         price: 10.00
+        //     }
+        // }
+
+        // ]
 
         $clean_cart = [];
 
         foreach ($carts as $row) {
-            $clean_cart[]= ["qty" => $row->qty, ...($row->product->toArray())];
+            $clean_cart[] = ["qty" => $row->qty, ...($row->product->toArray())];
         }
+
+        // $clean_cart= [
+        //     {qty: 4,
+        //            id: 23,
+        //         name: "shampoo antiforfora"
+        //         categories: "beauty",
+        //         price: 10.00
+        //     }
+        // ]
+
 
         return Inertia::render("Cart", [
             "products_in_cart" => $clean_cart
@@ -88,16 +112,34 @@ class CartController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $utente = $request->user();
+        $qty=$request->qty;
+
+ $stock = (Product::find($request->product_id))->stock;
+
+        if ($qty > $stock) {
+            abort(403);
+        }
+
+   
+        return Cart::where('user_id', $utente->id)
+                ->where('product_id', $request->product_id)
+                ->update(["qty" => $qty]);
+        
+    
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        $utente = $request->user();
+        //$id è l'id del prodotto da eliminare a carrello
+        return Cart::where('user_id', $utente->id)
+            ->where('product_id', $id)
+            ->delete();
     }
 }
