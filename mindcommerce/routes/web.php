@@ -20,6 +20,7 @@ Route::get('dashboard', [DashboardController::class, "show_dashboard"])->middlew
 Route::post("cart/add", [CartController::class, "store"])->middleware(['auth', 'verified']);
 Route::post("cart/edit", [CartController::class, "update"])->middleware(['auth', 'verified']);
 Route::get("cart", [CartController::class, "show"])->middleware(['auth', 'verified']);
+Route::get("checkout", [CartController::class, "checkout"])->middleware(['auth', 'verified']);
 Route::delete("cart/remove/{id}", [CartController::class, "destroy"])->middleware(['auth', 'verified']);
 
 Route::get("/admin/products", [ProductController::class, "get_products"])->middleware(["auth", IsAdmin::class]);

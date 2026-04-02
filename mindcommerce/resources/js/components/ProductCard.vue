@@ -24,15 +24,15 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
+let qty = ref(1)
 async function addToCart() {
   await fetch("/cart/add", {
     method: "POST",
-    body: JSON.stringify({ "product_id": props.product.id, "qty": this.qty }),
+    body: JSON.stringify({ "product_id": props.product.id, "qty": qty.value }),
     headers: { "Content-Type": "application/json" }
   });
 }
-let qty = ref(1)
+
 </script>
 
 <template>

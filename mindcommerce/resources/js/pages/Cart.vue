@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { App, Head, } from '@inertiajs/vue3';
+import { App, Head, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import ProductCart from '@/components/ProductCart.vue';
 import Separator from '@/components/ui/separator/Separator.vue';
+import Button from '@/components/ui/button/Button.vue';
+
 interface Product {
 
     id: number,
@@ -54,6 +56,18 @@ function ChangeProductQty(prod_id:any, new_qty:any) {
 
 }
 
+function ProceedToCheckout(){
+   
+    let qty_checked = prodotti.value?.every((prodotto)=> prodotto.qty>0)
+
+    if(qty_checked){
+        router.get("/checkout")
+    }else{
+        alert("attenzione tutti i prodotti a carrello devono essere con quantità maggiore di zero")
+    }
+
+}
+
 </script>
 
 <template>
@@ -64,6 +78,8 @@ function ChangeProductQty(prod_id:any, new_qty:any) {
     <AppLayout :breadcrumbs="[]">
         <div class="flex flex-wrap overflow-auto">
             Prezzo Totale: {{ totale_ivato.toFixed(2) }} €
+            <br/>
+            <Button v-on:click="ProceedToCheckout"> Checkout </Button>
             <Separator></Separator>
             <ProductCart @delete-product="deleteProduct" @change-qty="ChangeProductQty" v-for="product in prodotti" :product="product">
             </ProductCart>

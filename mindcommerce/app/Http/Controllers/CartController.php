@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductOrder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -115,20 +118,18 @@ class CartController extends Controller
     public function update(Request $request)
     {
         $utente = $request->user();
-        $qty=$request->qty;
+        $qty = $request->qty;
 
- $stock = (Product::find($request->product_id))->stock;
+        $stock = (Product::find($request->product_id))->stock;
 
         if ($qty > $stock) {
             abort(403);
         }
 
-   
+
         return Cart::where('user_id', $utente->id)
-                ->where('product_id', $request->product_id)
-                ->update(["qty" => $qty]);
-        
-    
+            ->where('product_id', $request->product_id)
+            ->update(["qty" => $qty]);
     }
 
     /**
@@ -141,5 +142,72 @@ class CartController extends Controller
         return Cart::where('user_id', $utente->id)
             ->where('product_id', $id)
             ->delete();
+    }
+
+    public function checkout(Request $request)
+    {
+        $utente = $request->user();
+
+        DB::beginTransaction();
+        $cart_rows  = Cart::with(["product"])->where("user_id", $utente->id)->get();
+        $after_tax_total = 0;
+        $stock_checked = array_all($cart_rows->toArray(), function ($cart_row) use ($after_tax_total) {
+            return $cart_row["qty"] <= $cart_row["product"]["stock"];
+        });
+
+
+        foreach ($cart_rows as $row) {
+            $after_tax_total = $after_tax_total + $row->product->price * $row->qty * 1.22;
+        }
+        /*
+        apro transazione
+        leggo righe carrello per l'utente
+        leggo la giacenza per ogni prodotto del carrello
+        verifico che la giacenza sia sufficiente - 
+        */
+        if (!$stock_checked) {
+            abort(416); //TODO sostituire con pagina adatta
+        }
+
+        $order = new Order();
+        $order->user_id = $utente->id;
+        $order->status = "P";
+        $order->notes = "";
+        $order->after_tax_total = $after_tax_total;
+
+        $order->save();
+
+        foreach ($cart_rows as $row) {
+
+            $prod_order_row = new ProductOrder();
+            $prod_order_row->order_id = $order->id;
+            $prod_order_row->product_id = $row->product_id;
+            $prod_order_row->VAT = "1.22";
+            $prod_order_row->price = $row->product->price;
+            $prod_order_row->qty = $row->qty;
+            $prod_order_row->save();
+
+            // scalo giacenza del prodotto
+
+            $prod = Product::find($row->product_id);
+            $prod->stock = $prod->stock - $row->qty;
+            $prod->save();
+        }
+
+        Cart::where('user_id', $utente->id)
+            ->delete();
+
+        DB::commit();
+
+        
+
+        /*
+        creo una riga su orders con stato "P"
+        creo tutte le righe necessarie su product_order
+        scalo la giacenza sul singolo prodotto a magazzino
+        elimino carrello
+        chiudo transazione
+        creo link stripe e aggiorno stato ordine a PU
+        */
     }
 }
