@@ -57,7 +57,6 @@ Route::prefix("/admin/user")->middleware(["auth", IsAdmin::class])->group(functi
 
 
 Route::post("stripe-webhook", [StripeController::class, "handle_webhook"]);
-Route::get("stripe-webhook", [StripeController::class, "handle_webhook"]);
 
 
 require __DIR__ . '/settings.php';
