@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Contracts\Encryption\StringEncrypter;
 use Illuminate\Http\Request;
 use Stripe\StripeClient;
+use Stripe\Webhook;
 
 class StripeController extends Controller
 {
     public static function createCheckout($cart_rows)
     {
         $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
-     
+
         $session = $stripe->checkout->sessions->create([
 
             'success_url' => env("APP_URL") . '/thank-you',
@@ -34,14 +35,14 @@ class StripeController extends Controller
         foreach ($cart_rows as $row) {
             $formatted_line_items[] = [
                 'price_data' =>
+                [
+                    "currency" => "eur",
+                    "unit_amount" => round(($row["product"]["price"] * 1.22), 2) * 100,
+                    "product_data" =>
                     [
-                        "currency" => "eur",
-                        "unit_amount" => $row["product"]["price"]*100*1.22,
-                        "product_data" =>
-                            [
-                                "name" => $row["product"]["name"]
-                            ]
-                    ],
+                        "name" => $row["product"]["name"]
+                    ]
+                ],
 
                 'quantity' => $row["qty"]
             ];
@@ -49,4 +50,11 @@ class StripeController extends Controller
         return $formatted_line_items;
     }
 
+
+    public function handle_webhook(Request $request) {
+
+
+        dd(Webhook::constructEvent($request->json(), $request->header("HTTP_STRIPE_SIGNATURE"), env('STRIPE_WEBHOOK_KEY')));
+
+    }
 }

@@ -195,15 +195,15 @@ class CartController extends Controller
         }
 
         $old_cart_rows = $cart_rows->toArray();
-        Cart::where('user_id', $utente->id)
-            ->delete();
+        
 
         DB::commit();
         DB::beginTransaction();
         $stripe_redirect = StripeController::createCheckout($old_cart_rows);
         $order->status = "PU";
         $order->save();
-
+        Cart::where('user_id', $utente->id)
+            ->delete();
         DB::commit();
 
         return $stripe_redirect;

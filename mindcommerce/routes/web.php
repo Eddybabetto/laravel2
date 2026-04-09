@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StripeController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -38,7 +39,7 @@ Route::put("/admin/products/{id}", [ProductController::class, "update"])->middle
 
 Route::prefix("/admin/user")->middleware(["auth", IsAdmin::class])->group(function () {
     Route::get("/", [AdminController::class, "get_users"]);
-    Route::get("/create",[AdminController::class, "create"]);
+    Route::get("/create", [AdminController::class, "create"]);
     Route::post("/create", [AdminController::class, "store"]);
     Route::delete("/{id}", [AdminController::class, "delete_user"]);
     Route::put("/{id}/restore", [AdminController::class, "restore_user"]);
@@ -53,6 +54,10 @@ Route::prefix("/admin/user")->middleware(["auth", IsAdmin::class])->group(functi
         Route::delete("/{address_id}", [AdminController::class, "delete_address_to_user"]);
     });
 });
+
+
+Route::post("stripe-webhook", [StripeController::class, "handle_webhook"]);
+Route::get("stripe-webhook", [StripeController::class, "handle_webhook"]);
 
 
 require __DIR__ . '/settings.php';
