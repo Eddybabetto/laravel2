@@ -56,12 +56,22 @@ function ChangeProductQty(prod_id:any, new_qty:any) {
 
 }
 
-function ProceedToCheckout(){
+async function ProceedToCheckout(){
    
     let qty_checked = prodotti.value?.every((prodotto)=> prodotto.qty>0)
 
     if(qty_checked){
-        router.get("/checkout")
+       try {
+    const response = await fetch("/checkout")
+    if (response.ok) {
+      let url = (await response.json()).url
+      window.location=url
+
+
+    }
+  } catch (error:any) {
+    console.error(error.message);
+  }
     }else{
         alert("attenzione tutti i prodotti a carrello devono essere con quantità maggiore di zero")
     }

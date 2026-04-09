@@ -14,6 +14,12 @@ Route::get('/', function () {
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');
+Route::get('/thank-you', function () {
+    return Inertia::render('ThankYou');
+});
+Route::get('/error', function () {
+    return Inertia::render('Error');
+});
 
 Route::get('dashboard', [DashboardController::class, "show_dashboard"])->middleware(['auth', 'verified'])->name('dashboard');
 

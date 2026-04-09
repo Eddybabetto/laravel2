@@ -67,7 +67,7 @@ class CartController extends Controller
     {
 
         $utente = $request->user();
-        $carts  = Cart::with(["product"])->where("user_id", $utente->id)->get();
+        $carts = Cart::with(["product"])->where("user_id", $utente->id)->get();
         // $carts  = $utente->products;
         // $carts = [
         //     {user_id: 1,
@@ -149,7 +149,7 @@ class CartController extends Controller
         $utente = $request->user();
 
         DB::beginTransaction();
-        $cart_rows  = Cart::with(["product"])->where("user_id", $utente->id)->get();
+        $cart_rows = Cart::with(["product"])->where("user_id", $utente->id)->get();
         $after_tax_total = 0;
         $stock_checked = array_all($cart_rows->toArray(), function ($cart_row) use ($after_tax_total) {
             return $cart_row["qty"] <= $cart_row["product"]["stock"];
@@ -194,12 +194,19 @@ class CartController extends Controller
             $prod->save();
         }
 
+        $old_cart_rows = $cart_rows->toArray();
         Cart::where('user_id', $utente->id)
             ->delete();
 
         DB::commit();
+        DB::beginTransaction();
+        $stripe_redirect = StripeController::createCheckout($old_cart_rows);
+        $order->status = "PU";
+        $order->save();
 
-        
+        DB::commit();
+
+        return $stripe_redirect;
 
         /*
         creo una riga su orders con stato "P"
