@@ -188,6 +188,7 @@ class CartController extends Controller
             $prod_order_row->save();
 
             // scalo giacenza del prodotto
+            // potrebbe essere sensato scalare dopo aver impostato PU
 
             $prod = Product::find($row->product_id);
             $prod->stock = $prod->stock - $row->qty;

@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendTestMail;
 use App\Models\Order;
 use Illuminate\Contracts\Encryption\StringEncrypter;
 use Illuminate\Http\Request;
+use Illuminate\Log\Logger as LogLogger;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Mail;
 use Stripe\StripeClient;
 use Stripe\Webhook;
+
 
 use function Laravel\Prompts\info;
 
@@ -55,31 +60,74 @@ class StripeController extends Controller
     }
 
 
-    public function handle_webhook(Request $request)
+    public function handle_webhook()
     {
-        info($request->all());
-        info($request->header("stripe-signature"));
-        info(env('STRIPE_WEBHOOK_KEY'));
-        // $event = Webhook::constructEvent($payload, $request->header("stripe-signature"), env('STRIPE_WEBHOOK_KEY'));
+     
+        //la documentazione ce lo spiega cosi, laravel fa i capricci e quindi lo teniamo cosi
+        $payload = @file_get_contents("php://input");
 
-        // switch ($event->type) {
-        //     case 'payment_intent.succeeded':
-        //         $paymentIntent = $event->data->object; // questo è già un payment intent che è andato a buon fine
+        $event = Webhook::constructEvent($payload, $_SERVER["HTTP_STRIPE_SIGNATURE"], env('STRIPE_WEBHOOK_KEY'));
+      
+        info($event);
+        switch ($event->type) {
+            case 'payment_intent.succeeded':
+                $paymentIntent = $event->data->object; // questo è già un payment intent che è andato a buon fine
+                info($paymentIntent);
+                $order = Order::find($paymentIntent->metadata["order_id"]);
+                info($order);
+                $order->status = "C";
+                $order->save();
+                break;
+            case 'payment_intent.canceled':
+                $paymentIntent = $event->data->object; // questo è già un payment intent che è andato a buon fine
+                info($paymentIntent);
+                $order = Order::find($paymentIntent->metadata["order_id"]);
+                info($order);
+                $order->status = "R";
+                $order->save();
+                break;
+            case 'payment_intent.payment_failed':
+                $paymentIntent = $event->data->object; // questo è già un payment intent che è andato a buon fine
+                info($paymentIntent);
+                $order = Order::find($paymentIntent->metadata["order_id"]);
+                info($order);
+                $order->status = "R";
+                $order->save();
+                break;
 
-        //         $order = Order::find($paymentIntent->metadata);
-        //         $order->status = "C";
-        //         $order->save();
-        //         break;
-        //     case 'payment_intent.canceled':
-        //         $paymentIntent = $event->data->object; // questo è già un payment intent che è stato cancellato
-        //         break;
-        //     case 'payment_intent.payment_failed':
-        //         $paymentIntent = $event->data->object; // questo è già un payment intent che è fallito
-        //         break;
-
-        //     default:
-        //         // Unexpected event type
-        //         error_log('Received unknown event type');
-        // }
+            default:
+                // Unexpected event type
+                error_log('Received unknown event type');
+        }
     }
+
+public function SendMail($to, $subject, $body) : bool {
+     
+//invio base di email con testo semplice
+ Mail::send([], [], function ($message) {
+        $message->to("test@test.com", "Test User")
+                ->subject("Test Email")
+                ->text("This is a test email from Laravel 12.");
+        });
+
+
+        //invio di email usando un blade (frontend php) più complesso
+
+    $data = [
+        'name' => 'Test User',
+        'body' => 'This is a test email from Laravel 12.'
+    ];
+
+    Mail::send('emails.test_email', $data, function ($message) {
+        $message->to("test@test.com", "Test User")
+                ->subject("Test Email");
+    });
+
+
+    //invio mail usando un mailable: 
+    //oggetto complesso e moderno di laravel per formattare e rendere dinamiche le mail
+    // deve essere creato prima il file con il comando "php artisan make:mail SendTestMail"
+    Mail::to('test@test.com')->send(new SendTestMail("name", "message"));
+        return true;
+}
 }
